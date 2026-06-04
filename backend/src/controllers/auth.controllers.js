@@ -117,8 +117,38 @@ const login = async (req, res) => {
     }
 }
 
+const getProfile = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const [rows] = await db.query(
+            "SELECT id, name, email, role, created_at, updated_at FROM users WHERE id = ?",
+            [userId]
+        );
+
+        const user = rows[0];
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        return res.status(200).json({
+            message: "Profile loaded successfully",
+            user,
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            message: "Invalid or expired token",
+        });
+    }
+}
+
 module.exports = {
     register,
     getUser,
     login,
+    getProfile,
 }
