@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const db = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
+const eventRoutes = require("./routes/event.routes");
 
 const app = express();
 
@@ -52,5 +53,7 @@ app.get("/health/tables", async (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+
+app.use("/api/events", eventRoutes);
 
 module.exports = app;
