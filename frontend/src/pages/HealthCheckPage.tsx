@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 
-export function HealthCheckPage() {
+export const HealthCheckPage = () => {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 

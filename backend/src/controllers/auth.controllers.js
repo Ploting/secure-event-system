@@ -63,16 +63,16 @@ const getUser = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { userNameOrEmail, password } = req.body;
 
-        if (!email || !password) {
+        if (!userNameOrEmail || !password) {
             return res.status(401).json({
                 message: "Email and password are required",
             });
         }
 
         const [userList] = await db.query(
-            "Select * from users WHERE email = ?", [email]
+            "Select * from users WHERE email = ? or name = ?", [userNameOrEmail, userNameOrEmail]
         );
 
         const user = userList[0];

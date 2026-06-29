@@ -1,4 +1,4 @@
-import api from "../api/axios"
+import api from "./axios"
 import type { RegisterForm, RegisterResponse } from "../types/auth"
 
 export const userRegister = async (form: RegisterForm) => {

@@ -1,10 +1,10 @@
-export type RegisterForm = {
+export interface RegisterForm {
   name: string;
   email: string;
   password: string;
 };
 
-export type RegisterResponse = {
+export interface RegisterResponse {
   message: string;
   user: {
     id: number;

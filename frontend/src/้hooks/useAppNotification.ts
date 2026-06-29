@@ -12,7 +12,7 @@ export function useAppNotification() {
     time = 2
   ) => {
     api[type]({
-      message: title,
+      title: title,
       description: desc,
       duration: time,
     });
