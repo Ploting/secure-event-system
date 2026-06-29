@@ -11,12 +11,12 @@ const register = async (req, res) => {
         }
 
         const [existingUser] = await db.query(
-            "Select id From users WHERE email = ?", [email]
+            "Select id From users WHERE name = ?", [name]
         )
 
         if (existingUser.length > 0) {
             return res.status(400).json({
-                message: "Email Already Exist"
+                message: "Name Already Exist"
             })
         }
 

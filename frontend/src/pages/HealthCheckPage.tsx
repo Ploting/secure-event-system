@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { api } from "../api/axios";
+import api from "../api/axios";
 
 export function HealthCheckPage() {
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+
+    console.log("API URL =", import.meta.env.VITE_API_URL);
 
     useEffect(() => {
         async function checkHealth() {

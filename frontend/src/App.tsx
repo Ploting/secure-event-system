@@ -1,8 +1,8 @@
-import { HealthCheckPage } from './pages/HealthCheckPage'
+import { RegisterPage } from './pages/RegisterPage';
 import './App.css'
 
 function App() {
-  return <HealthCheckPage />;
+  return <RegisterPage />;
 }
 
 export default App
