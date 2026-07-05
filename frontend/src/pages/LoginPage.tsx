@@ -25,7 +25,10 @@ export const LoginPage = () => {
                 return;
             }
 
-            await userLogin(form);
+            const res = await userLogin(form);
+
+            localStorage.setItem("token", res.token);
+            localStorage.setItem("user", JSON.stringify(res.user));
 
             openNotification("success", "Login Successfully", "ลงทะเบียนสำเร็จแล้ว ย้ายไปหน้าเข้าสู่ระบบ", 2)
             // window.alert("Register Successfully");
@@ -37,7 +40,7 @@ export const LoginPage = () => {
         }
         finally {
             setLoading(false);
-
+            navigate("/events");
         }
     };
 
@@ -51,7 +54,7 @@ export const LoginPage = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                
+
                 <div className="flex flex-col w-100 place-self-center">
                     <label className="font-bold">Username Or Email</label>
                     <input

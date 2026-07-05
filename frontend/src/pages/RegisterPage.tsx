@@ -8,8 +8,6 @@ export const RegisterPage = () => {
     const navigate = useNavigate();
     const { openNotification, contextHolder  } = useAppNotification();
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -38,6 +36,7 @@ export const RegisterPage = () => {
         }
         finally {
             setLoading(false);
+            navigate("/login");
 
         }
     };
@@ -52,8 +51,6 @@ export const RegisterPage = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
-                {error && <p className="p-5 rounded-lg text-red-500 border border-red-500 bg-red-200">{error}</p>}
 
                 <div className="flex flex-col w-100 place-self-center">
                     <label className="font-bold">Username</label>
