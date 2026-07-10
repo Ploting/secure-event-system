@@ -1,10 +1,13 @@
-import { RegisterPage } from './pages/RegisterPage';
+import { RegisterPage } from "./pages/RegisterPage";
 import { Route, Routes } from "react-router-dom";
-import { LoginPage } from './pages/LoginPage';
-import { HealthCheckPage } from './pages/HealthCheckPage';
-import { ProtectedRoute } from './routes/ProtectedRoute';
-import { EventsPage } from './pages/EventPage';
-import './App.css'
+import { LoginPage } from "./pages/LoginPage";
+import { HealthCheckPage } from "./pages/HealthCheckPage";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { EventsPage } from "./pages/EventPage/EventPage";
+import { CreateEventPage } from "./pages/EventPage/CreateEventPage";
+import { EventDetailPage } from "./pages/EventPage/EventDetailPage";
+import { EditEventPage } from "./pages/EventPage/EditEventPage";
+import "./App.css";
 
 function App() {
   return (
@@ -13,16 +16,40 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
 
-      <Route path="/events"
+      <Route
+        path="/events"
         element={
           <ProtectedRoute>
             <EventsPage />
           </ProtectedRoute>
-        }>
-      </Route>
-
+        }
+      ></Route>
+      <Route
+        path="/events/create"
+        element={
+          <ProtectedRoute>
+            <CreateEventPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/events/:id"
+        element={
+          <ProtectedRoute>
+            <EventDetailPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/events/:id/edit"
+        element={
+          <ProtectedRoute>
+            <EditEventPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
-};
+}
 
 export default App;

@@ -1,4 +1,4 @@
-export interface EventItem  {
+export type EventItem = {
   id: number;
   title: string;
   description: string | null;
@@ -10,14 +10,30 @@ export interface EventItem  {
   updated_at: string;
 };
 
-export interface CreateEventForm {
+export type CreateEventForm = {
   title: string;
   description: string;
   location: string;
   event_date: string;
 };
 
-export interface CreateEventResponse {
+export type CreateEventResponse = {
   message: string;
   event: EventItem;
+};
+
+export type GetEventResponse = {
+  event: EventItem;
+};
+
+export type UpdateEventForm = {
+  title: string;
+  description: string;
+  location: string;
+  event_date: string;
+};
+
+export type UpdateEventResponse = {
+  message: string;
+  event?: EventItem;
 };
