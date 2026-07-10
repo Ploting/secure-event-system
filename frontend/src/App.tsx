@@ -2,8 +2,8 @@ import { RegisterPage } from './pages/RegisterPage';
 import { Route, Routes } from "react-router-dom";
 import { LoginPage } from './pages/LoginPage';
 import { HealthCheckPage } from './pages/HealthCheckPage';
-import { ProctectedRoute } from './routes/ProtectedRoute';
-import { EventPage } from './pages/EventPage';
+import { ProtectedRoute } from './routes/ProtectedRoute';
+import { EventsPage } from './pages/EventPage';
 import './App.css'
 
 function App() {
@@ -15,9 +15,9 @@ function App() {
 
       <Route path="/events"
         element={
-          <ProctectedRoute>
-            <EventPage />
-          </ProctectedRoute>
+          <ProtectedRoute>
+            <EventsPage />
+          </ProtectedRoute>
         }>
       </Route>
 
