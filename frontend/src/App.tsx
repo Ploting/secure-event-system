@@ -1,7 +1,6 @@
 import { RegisterPage } from "./pages/RegisterPage";
 import { Route, Routes } from "react-router-dom";
 import { LoginPage } from "./pages/LoginPage";
-import { HealthCheckPage } from "./pages/HealthCheckPage";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { EventsPage } from "./pages/EventPage/EventPage";
 import { CreateEventPage } from "./pages/EventPage/CreateEventPage";

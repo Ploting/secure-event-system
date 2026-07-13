@@ -1,5 +1,4 @@
 import { useState } from "react";
-import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { userRegister } from "../api/registerApi";
 import RegisterInScreen from "../assets/lock-screen.png"
@@ -15,7 +14,7 @@ export const RegisterPage = () => {
         password: "",
     })
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         try {

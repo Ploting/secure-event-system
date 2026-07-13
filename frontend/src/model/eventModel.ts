@@ -37,3 +37,7 @@ export type UpdateEventResponse = {
   message: string;
   event?: EventItem;
 };
+
+export type DeleteEventResponse = {
+  message: string;
+};

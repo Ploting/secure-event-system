@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { getEvents } from "../../api/eventApi";
 import type { EventItem } from "../../model/eventModel";
@@ -9,10 +9,40 @@ export function EventsPage() {
   const { user, logout } = useAuth();
 
   const [events, setEvents] = useState<EventItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchEvents = async () => {
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadEvents() {
+      try {
+        const data = await getEvents();
+
+        if (!ignore) {
+          setEvents(data);
+        }
+      } catch (error) {
+        console.error("Fetch events failed:", error);
+
+        if (!ignore) {
+          setError("ไม่สามารถโหลดรายการ event ได้");
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadEvents();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const retryEvents = async () => {
     try {
       setLoading(true);
       setError("");
@@ -21,16 +51,12 @@ export function EventsPage() {
 
       setEvents(data);
     } catch (error) {
-      console.log(error);
+      console.error("Retry events failed:", error);
       setError("ไม่สามารถโหลดรายการ event ได้");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
 
   if (loading) {
     return <p className="text-center">Loading events...</p>;
@@ -40,9 +66,11 @@ export function EventsPage() {
     return (
       <div className="flex flex-col items-center gap-4">
         <p className="text-red-500">{error}</p>
+
         <button
-          onClick={fetchEvents}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          type="button"
+          onClick={retryEvents}
+          className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white"
         >
           Retry
         </button>
@@ -90,18 +118,29 @@ export function EventsPage() {
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">{event.title}</h2>
-                    <p className="mt-2 text-gray-600">{event.description || "-"}</p>
+                    <h2 className="text-xl font-bold text-gray-900">
+                      {event.title}
+                    </h2>
+                    <p className="mt-2 text-gray-600">
+                      {event.description || "-"}
+                    </p>
                   </div>
                   <div className="text-sm text-gray-500">
-                    <p className="mb-1"><span className="font-semibold">Location:</span> {event.location || "-"}</p>
-                    <p><span className="font-semibold">Date:</span> {event.event_date}</p>
+                    <p className="mb-1">
+                      <span className="font-semibold">Location:</span>{" "}
+                      {event.location || "-"}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Date:</span>{" "}
+                      {event.event_date}
+                    </p>
                   </div>
                 </div>
 
                 {event.created_by_name && (
                   <div className="mt-4 text-sm text-gray-500">
-                    <span className="font-semibold">Created by:</span> {event.created_by_name}
+                    <span className="font-semibold">Created by:</span>{" "}
+                    {event.created_by_name}
                   </div>
                 )}
 

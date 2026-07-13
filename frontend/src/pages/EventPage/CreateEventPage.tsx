@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { createEvent } from "../../api/eventApi";
 import { useAppNotification } from "../../hooks/useAppNotification";
@@ -8,16 +8,16 @@ export function CreateEventPage() {
   const navigate = useNavigate();
   const { contextHolder, openNotification } = useAppNotification();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
 
-  const [form, setForm] = useState<CreateEventForm>({
+  const [form, setForm] = React.useState<CreateEventForm>({
     title: "",
     description: "",
     location: "",
     event_date: "",
   });
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
@@ -59,6 +59,7 @@ export function CreateEventPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      {contextHolder}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-900">Create Event</h1>

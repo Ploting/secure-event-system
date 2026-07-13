@@ -1,43 +1,91 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getEventById } from "../../api/eventApi";
+import { deleteEvent, getEventById } from "../../api/eventApi";
 import type { EventItem } from "../../model/eventModel";
 import { useAuth } from "../../hooks/useAuth";
+import { useAppNotification } from "../../hooks/useAppNotification";
 
 export function EventDetailPage() {
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
   const { id } = useParams();
+  const { user, isAdmin } = useAuth();
+  const { contextHolder, openNotification } = useAppNotification();
+
   const [event, setEvent] = useState<EventItem | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
 
-  const fetchEvent = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  useEffect(() => {
+    let ignore = false;
 
+    async function loadEvent() {
       if (!id) {
-        setError("ไม่พบ event id");
+        if (!ignore) {
+          setError("ไม่พบ event id");
+          setLoading(false);
+        }
+
         return;
       }
 
-      const data = await getEventById(id);
+      try {
+        const data = await getEventById(id);
 
-      console.log("event detail data =", data);
+        if (!ignore) {
+          setEvent(data);
+        }
+      } catch (error) {
+        console.error("Fetch event failed:", error);
 
-      setEvent(data);
+        if (!ignore) {
+          setError("ไม่สามารถโหลดรายละเอียด event ได้");
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadEvent();
+
+    return () => {
+      ignore = true;
+    };
+  }, [id]);
+
+  const handleDelete = async () => {
+    if (!id || !event) {
+      openNotification("error", "Delete Failed", "ไม่พบข้อมูล event", 2);
+
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `ต้องการลบ event "${event.title}" ใช่หรือไม่?`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+
+      await deleteEvent(id);
+
+      openNotification("success", "Delete Successfully", "ลบ event สำเร็จ", 2);
+
+      navigate("/events", { replace: true });
     } catch (error) {
-      console.log(error);
-      setError("ไม่สามารถโหลดรายละเอียด event ได้");
+      console.error("Delete event failed:", error);
+
+      openNotification("error", "Delete Failed", "ไม่สามารถลบ event ได้", 2);
     } finally {
-      setLoading(false);
+      setDeleting(false);
     }
   };
-
-  useEffect(() => {
-    fetchEvent();
-  }, [id]);
 
   const isOwner = Number(user?.id) === Number(event?.created_by);
 
@@ -50,10 +98,14 @@ export function EventDetailPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center gap-4">
+        {contextHolder}
+
         <p className="text-red-500">{error}</p>
+
         <button
+          type="button"
           onClick={() => navigate("/events")}
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+          className="rounded bg-blue-500 px-3 py-2 text-white"
         >
           Back to Events
         </button>
@@ -66,56 +118,66 @@ export function EventDetailPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <div className="flex items-center space-x-3">
+    <div className="flex flex-col gap-6">
+      {contextHolder}
+
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => navigate("/events")}
+          className="rounded border px-3 py-2"
+        >
+          Back
+        </button>
+
+        {canManageEvent && (
+          <>
             <button
-              onClick={() => navigate("/events")}
-              className="px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300"
+              type="button"
+              onClick={() => navigate(`/events/${event.id}/edit`)}
+              className="rounded bg-yellow-500 px-3 py-2 text-white"
             >
-              Back
+              Edit
             </button>
-            {canManageEvent && (
-              <button
-                onClick={() => navigate(`/events/${event.id}/edit`)}
-                className="px-4 py-2 bg-yellow-500 text-white font-medium rounded-md hover:bg-yellow-600 hover:text-black"
-              >
-                Edit
-              </button>
-            )}
-          </div>
-          <h1 className="text-xl font-bold text-gray-900 flex-1 text-center">{event.title}</h1>
-        </div>
-      </header>
 
-      <main className="flex-1 w-full overflow-y-auto px-4 py-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900">{event.title}</h2>
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleting}
+              className="rounded bg-red-500 px-3 py-2 text-white disabled:opacity-50"
+            >
+              {deleting ? "Deleting..." : "Delete"}
+            </button>
+          </>
+        )}
+      </div>
 
-            <p className="text-gray-600">{event.description || "-"}</p>
+      <div className="flex flex-col gap-3 rounded-lg border p-6">
+        <h1 className="text-4xl font-bold">{event.title}</h1>
 
-            <div className="text-sm text-gray-500 space-y-2">
-              <p>
-                <span className="font-semibold">Location:</span> {event.location || "-"}
-              </p>
-              <p>
-                <span className="font-semibold">Date:</span> {event.event_date}
-              </p>
-              <p>
-                <span className="font-semibold">Created by:</span> {event.created_by_name || event.created_by}
-              </p>
-              <p>
-                <span className="font-semibold">Created at:</span> {event.created_at}
-              </p>
-              <p>
-                <span className="font-semibold">Updated at:</span> {event.updated_at}
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
+        <p>{event.description || "-"}</p>
+
+        <p>
+          <span className="font-bold">Location:</span> {event.location || "-"}
+        </p>
+
+        <p>
+          <span className="font-bold">Date:</span> {event.event_date}
+        </p>
+
+        <p>
+          <span className="font-bold">Created by:</span>{" "}
+          {event.created_by_name || event.created_by}
+        </p>
+
+        <p>
+          <span className="font-bold">Created at:</span> {event.created_at}
+        </p>
+
+        <p>
+          <span className="font-bold">Updated at:</span> {event.updated_at}
+        </p>
+      </div>
     </div>
   );
 }

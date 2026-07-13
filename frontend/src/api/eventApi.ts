@@ -4,7 +4,8 @@ import type {
   CreateEventForm,
   CreateEventResponse,
   UpdateEventForm,
-  UpdateEventResponse
+  UpdateEventResponse,
+  DeleteEventResponse
 } from "../model/eventModel";
 
 interface GetEventsResponse {
@@ -38,6 +39,14 @@ export const updateEvent = async (id: string, form: UpdateEventForm) => {
   const response = await api.put<UpdateEventResponse>(
     `/api/events/${id}`,
     form,
+  );
+
+  return response.data;
+};
+
+export const deleteEvent = async (id: string | number) => {
+  const response = await api.delete<DeleteEventResponse>(
+    `/api/events/${id}`
   );
 
   return response.data;
