@@ -1,8 +1,9 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { userRegister } from "../api/registerApi";
 import RegisterInScreen from "../assets/lock-screen.png"
-import { useAppNotification } from "../้hooks/useAppNotification";
+import { useAppNotification } from "../hooks/useAppNotification";
 
 export const RegisterPage = () => {
     const navigate = useNavigate();
@@ -42,18 +43,17 @@ export const RegisterPage = () => {
     };
 
     return (
-        <div className="flex flex-col gap-10">
+        <div className="m-auto flex flex-col items-center p-6 bg-white rounded-lg shadow-md w-full max-w-sm">
             {contextHolder}
 
-            <div className="flex flex-col items-center">
-                <img src={RegisterInScreen} width={100} />
-                <div className="text-5xl text-center">Register</div>
+            <div className="flex flex-col items-center mb-6">
+                <img src={RegisterInScreen} width={80} />
+                <h2 className="text-2xl font-bold mt-4">Register</h2>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
-                <div className="flex flex-col w-100 place-self-center">
-                    <label className="font-bold">Username</label>
+            <form onSubmit={handleSubmit} className="w-full space-y-4">
+                <div>
+                    <label className="block text-sm font-medium mb-1">Username</label>
                     <input
                         name="username"
                         value={form.name}
@@ -61,11 +61,11 @@ export const RegisterPage = () => {
                             ...form,
                             name: e.target.value
                         }))}
-                        className="input"
+                        className="input w-full"
                     />
                 </div>
-                <div className="flex flex-col w-100 place-self-center">
-                    <label className="font-bold">Email</label>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Email</label>
                     <input
                         name="email"
                         value={form.email}
@@ -73,11 +73,11 @@ export const RegisterPage = () => {
                             ...form,
                             email: e.target.value
                         }))}
-                        className="input"
+                        className="input w-full"
                     />
                 </div>
-                <div className="flex flex-col w-100 place-self-center">
-                    <label className="font-bold">Password</label>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Password</label>
                     <input
                         name="password"
                         type="password"
@@ -86,14 +86,16 @@ export const RegisterPage = () => {
                             ...form,
                             password: e.target.value
                         }))}
-                        className="input"
+                        className="input w-full"
                     />
                 </div>
                 <button
-                    disabled={loading} type="submit"
-                    className={`border self-center w-fit px-3 py-2 rounded bg-blue-500 text-white transition-all cursor-pointer hover:bg-blue-700 ${loading ?? `cursor-none`}`}
+                    type="submit"
+                    disabled={loading}
+                    className="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
                 >
-                    {loading ? "Loading..." : "Register"}</button>
+                    {loading ? "Registering..." : "Register"}
+                </button>
             </form>
         </div>
     )

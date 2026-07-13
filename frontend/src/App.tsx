@@ -8,11 +8,12 @@ import { CreateEventPage } from "./pages/EventPage/CreateEventPage";
 import { EventDetailPage } from "./pages/EventPage/EventDetailPage";
 import { EditEventPage } from "./pages/EventPage/EditEventPage";
 import "./App.css";
+import { Navigate } from "react-router-dom";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<HealthCheckPage />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
 

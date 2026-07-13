@@ -1,15 +1,23 @@
-import { Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
-import { isAuthenticated } from "../utils/auth";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 type ProtectedRouteProps = {
   children: ReactNode;
 };
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const authenticated = isAuthenticated();
+  const { isAuthenticated, isAuthLoading } = useAuth();
 
-  if (!authenticated) {
+  if (isAuthLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p>Checking authentication...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 

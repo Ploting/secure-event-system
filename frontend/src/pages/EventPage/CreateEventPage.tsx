@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { createEvent } from "../../api/eventApi";
-import { useAppNotification } from "../../้hooks/useAppNotification";
+import { useAppNotification } from "../../hooks/useAppNotification";
 import type { CreateEventForm } from "../../model/eventModel";
 
 export function CreateEventPage() {
@@ -58,90 +58,98 @@ export function CreateEventPage() {
   };
 
   return (
-    <div className="flex flex-col gap-8">
-      {contextHolder}
-
-      <h1 className="text-4xl font-bold text-center">Create Event</h1>
-
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <div className="flex flex-col w-100 place-self-center">
-          <label className="font-bold">Title</label>
-          <input
-            name="title"
-            value={form.title}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                title: e.target.value,
-              })
-            }
-            className="input"
-          />
-        </div>
-
-        <div className="flex flex-col w-100 place-self-center">
-          <label className="font-bold">Description</label>
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                description: e.target.value,
-              })
-            }
-            className="input"
-          />
-        </div>
-
-        <div className="flex flex-col w-100 place-self-center">
-          <label className="font-bold">Location</label>
-          <input
-            name="location"
-            value={form.location}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                location: e.target.value,
-              })
-            }
-            className="input"
-          />
-        </div>
-
-        <div className="flex flex-col w-100 place-self-center">
-          <label className="font-bold">Event Date</label>
-          <input
-            name="event_date"
-            type="datetime-local"
-            value={form.event_date}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                event_date: e.target.value,
-              })
-            }
-            className="input"
-          />
-        </div>
-
-        <div className="flex flex-row justify-between">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <h1 className="text-xl font-bold text-gray-900">Create Event</h1>
           <button
-            onClick={() => (navigate("/events"))}
-            type="button"
-            className="border self-center w-fit px-3 py-2 rounded bg-blue-500 text-white transition-all cursor-pointer hover:bg-blue-700 disabled:opacity-50"
+            onClick={() => navigate("/events")}
+            className="px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300"
           >
-            {`<`} back
-          </button>
-          <button
-            disabled={loading}
-            type="submit"
-            className="border self-center w-fit px-3 py-2 rounded bg-blue-500 text-white transition-all cursor-pointer hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? "Loading..." : "Create Event"}
+            Back
           </button>
         </div>
-      </form>
+      </header>
+
+      <main className="flex-1 w-full overflow-y-auto px-4 py-6">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium mb-1">Title</label>
+              <input
+                name="title"
+                value={form.title}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    title: e.target.value,
+                  })
+                }
+                className="input w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Description</label>
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    description: e.target.value,
+                  })
+                }
+                className="input w-full h-32"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Location</label>
+              <input
+                name="location"
+                value={form.location}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    location: e.target.value,
+                  })
+                }
+                className="input w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Event Date</label>
+              <input
+                name="event_date"
+                type="datetime-local"
+                value={form.event_date}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    event_date: e.target.value,
+                  })
+                }
+                className="input w-full"
+              />
+            </div>
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => navigate("/events")}
+                className="px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition-colors"
+              >
+                {loading ? "Creating..." : "Create Event"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
     </div>
   );
 }

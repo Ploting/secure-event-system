@@ -6,7 +6,7 @@ interface JwtPayload {
   role: "user" | "admin";
   iat: number;
   exp: number;
-};
+}
 
 export function getToken() {
   return localStorage.getItem("token");
@@ -15,6 +15,15 @@ export function getToken() {
 export function removeAuthStorage() {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
+}
+
+export function decodeToken(token: string): JwtPayload | null {
+  try {
+    return jwtDecode<JwtPayload>(token);
+  } catch (error) {
+    console.error("Cannot decode token:", error);
+    return null;
+  }
 }
 
 export function isTokenExpired(token: string) {
@@ -31,17 +40,20 @@ export function isTokenExpired(token: string) {
   }
 }
 
-export function isAuthenticated() {
+export function getCurrentUser(): JwtPayload | null {
   const token = getToken();
 
   if (!token) {
-    return false;
+    return null;
   }
 
   if (isTokenExpired(token)) {
     removeAuthStorage();
-    return false;
+    return null;
   }
+  return decodeToken(token);
+}
 
-  return true;
+export function isAuthenticated(): boolean {
+  return getCurrentUser() !== null;
 }
